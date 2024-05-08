@@ -15,6 +15,7 @@ class _LocationScreenState extends State<LocationScreen> {
   late String city;
   late int temprature;
   late String message;
+  late String bgImage;
 
   WeatherModel weather = WeatherModel();
 
@@ -26,11 +27,15 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUi(dynamic weatherData) {
-    var condition = weatherData['weather'][0]['id'];
-    city = weatherData['name'];
-    double temp = weatherData['main']['temp'];
-    temprature = temp.toInt();
-    weatherIcon = weather.getWeatherIcon(condition);
+    setState(() {
+      var condition = weatherData['weather'][0]['id'];
+      city = weatherData['name'];
+      double temp = weatherData['main']['temp'];
+      temprature = temp.toInt();
+      weatherIcon = weather.getWeatherIcon(condition);
+      message = weather.getMessage(temprature);
+      bgImage = weather.getWeatherBg(condition);
+    });
   }
 
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class _LocationScreenState extends State<LocationScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('images/location_background.jpg'),
+            image: NetworkImage(bgImage),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
                 Colors.white.withOpacity(0.8), BlendMode.dstATop),
@@ -87,7 +92,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's  time in $city!",
+                  "$message in $city!",
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),
