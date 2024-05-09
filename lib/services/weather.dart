@@ -4,6 +4,14 @@ import 'location.dart';
 
 class WeatherModel {
   final LocationService locationService = LocationService();
+
+  Future<dynamic> getCityWeather(String cityNameSearch) async {
+    NetworkHelper networkHelper = await NetworkHelper(
+        '$kOpenWeatherMapUrl?q=$cityNameSearch&appid=$kApiKey&units=metric');
+    var weatherData = await networkHelper.getData();
+    return weatherData;
+  }
+
   Future<dynamic> getLocationWeather() async {
     try {
       Map<String, double> coordinates =

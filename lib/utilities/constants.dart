@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 const kApiKey = '02dd32e4466f474010342e5dd536ed3b';
@@ -20,4 +22,22 @@ const kButtonTextStyle = TextStyle(
 
 const kConditionTextStyle = TextStyle(
   fontSize: 100.0,
+);
+const kTextFieldStyle = InputDecoration(
+  filled: true,
+  fillColor: Colors.white,
+  prefixIcon: Icon(Icons.search),
+  icon: Icon(
+    Icons.location_city,
+    color: Colors.white,
+  ),
+  hintText: 'Enter City Name',
+  hintStyle: TextStyle(color: Colors.grey),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(
+      Radius.circular(15),
+    ),
+    gapPadding: 5,
+    borderSide: BorderSide.none,
+  ),
 );
