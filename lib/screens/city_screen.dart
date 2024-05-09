@@ -35,7 +35,18 @@ class _CityScreenState extends State<CityScreen> {
               ),
               Container(
                 padding: const EdgeInsets.all(20.0),
-                child: null,
+                child: const TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    icon: Icon(
+                      Icons.location_city,
+                      color: Colors.white,
+                    ),
+                    hintText: 'search',
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                ),
               ),
               TextButton(
                   onPressed: () {},
