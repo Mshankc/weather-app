@@ -1,18 +1,22 @@
 import 'package:geolocator/geolocator.dart';
 
-class Location {
-  double latitude = -82.862755;
-  double longitude = 135.000000;
-
-  Future<void> getCurrentLocation() async {
+class LocationService {
+  Future<Map<String, double>> getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.low,
           forceAndroidLocationManager: true);
-      latitude = position.latitude;
-      longitude = position.longitude;
+      double latitude = position.latitude;
+      double longitude = position.longitude;
+      print(latitude);
+      print(longitude);
+      return {'latitude': latitude, 'longitude': longitude};
     } catch (e) {
-      print('ERROR $e');
+      print('Error getting location: $e');
+      return {
+        'latitude': 0.0,
+        'longitude': 0.0
+      }; // Default location or handle error
     }
   }
 }

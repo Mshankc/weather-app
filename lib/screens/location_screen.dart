@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/city_screen.dart';
 import '../utilities/constants.dart';
 import 'package:weather_app/services/weather.dart';
 
@@ -26,8 +27,17 @@ class _LocationScreenState extends State<LocationScreen> {
     print(temprature);
   }
 
-  void updateUi(dynamic weatherData) {
+  updateUi(dynamic weatherData) async {
     setState(() {
+      if (weatherData == null) {
+        temprature = 0;
+        city = 'Connect!';
+        weatherIcon = 'ERROR';
+        message = 'Unable to ';
+        bgImage =
+            'https://cdn.pixabay.com/photo/2023/12/20/07/04/clouds-8459053_1280.jpg';
+        return;
+      }
       var condition = weatherData['weather'][0]['id'];
       city = weatherData['name'];
       double temp = weatherData['main']['temp'];
@@ -35,6 +45,7 @@ class _LocationScreenState extends State<LocationScreen> {
       weatherIcon = weather.getWeatherIcon(condition);
       message = weather.getMessage(temprature);
       bgImage = weather.getWeatherBg(condition);
+      print(condition);
     });
   }
 
@@ -59,14 +70,24 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() async {
+                        var weatherData = weather.getLocationWeather();
+                        await updateUi(weatherData);
+                      });
+                    },
                     child: const Icon(
                       Icons.near_me,
                       size: 50.0,
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const CityScreen();
+                      }));
+                    },
                     child: const Icon(
                       Icons.location_city,
                       size: 50.0,
@@ -78,13 +99,17 @@ class _LocationScreenState extends State<LocationScreen> {
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Row(
                   children: <Widget>[
-                    Text(
-                      '$temprature°',
-                      style: kTempTextStyle,
+                    Expanded(
+                      child: Text(
+                        '$temprature°',
+                        style: kTempTextStyle,
+                      ),
                     ),
-                    Text(
-                      weatherIcon,
-                      style: kConditionTextStyle,
+                    Expanded(
+                      child: Text(
+                        weatherIcon,
+                        style: kConditionTextStyle,
+                      ),
                     ),
                   ],
                 ),

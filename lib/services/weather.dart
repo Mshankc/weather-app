@@ -1,18 +1,24 @@
 import 'package:weather_app/services/networking.dart';
-import '../services/location.dart';
 import '../utilities/constants.dart';
+import 'location.dart';
 
 class WeatherModel {
+  final LocationService locationService = LocationService();
   Future<dynamic> getLocationWeather() async {
-    Location location = Location();
+    try {
+      Map<String, double> coordinates =
+          await locationService.getCurrentLocation();
+      double latitude = coordinates['latitude']!;
+      double longitude = coordinates['longitude']!;
 
-    await Location().getCurrentLocation();
-
-    NetworkHelper networkHelper = NetworkHelper(
-        '$kOpenWeatherMapUrl?lat=${location.latitude}&lon=${location.longitude}&appid=$kApiKey&units=metric');
-
-    var weatherData = await networkHelper.getData();
-    return weatherData;
+      NetworkHelper networkHelper = NetworkHelper(
+          '$kOpenWeatherMapUrl?lat=$latitude&lon=$longitude&appid=$kApiKey&units=metric');
+      var weatherData = await networkHelper.getData();
+      return weatherData;
+    } catch (e) {
+      print('Error fetching weather data: $e');
+      return null; // Return null or handle the error appropriately
+    }
   }
 
   String getWeatherIcon(int condition) {
@@ -49,7 +55,7 @@ class WeatherModel {
     } else if (condition == 800) {
       return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMnvoGu4r1BjlNk9eDH0h49cRtIwWA0dr0P6kYokGg_A&s.jpg';
     } else if (condition <= 804) {
-      return 'https://www.highcountryweather.com/wp-content/uploads/2016/11/2016-november-03-how-snowy.jpg';
+      return 'https://www.rochesterfirst.com/wp-content/uploads/sites/66/2021/04/storm-466677_1920.jpg';
     } else {
       return 'https://cdn.pixabay.com/photo/2023/12/20/07/04/clouds-8459053_1280.jpg';
     }
